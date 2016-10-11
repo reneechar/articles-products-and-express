@@ -5,37 +5,49 @@ const dbProducts = require('../db/products.js');
 
 router.get('/', (req,res) => {
   res.render('index', {
-    page: 'Product Page'
-  })
-})
-
-router.post('/', (req,res) => {
-  //creates a new product
-  //req = { name: String, price: String, inventory: String }
-
-  dbProducts.addNewProduct(req);
-
-  res.render('index', {
     page: 'Product Page',
-    entered: true
-  })
-
-})
-
-
-//render PUT/DELETE methods
-router.get('/:id', (req,res) => {
-  res.render('putOrDelete', {
-    page: 'Product Page'
+    products: dbProducts.getProductList()
   })
 })
 
-router.put('/:id', (req,res) => {
-  //edits a product, find by id
+
+//handles requests from postman
+// router.put('/:id', (req,res) => {
+//   console.log('test');
+//   dbProducts.editProduct(req,res);
+// })
+
+// router.delete('/:id', (req,res) => {
+//   dbProducts.deleteProduct(req,res);
+// })
+
+
+//handles get request from browser/postman
+router.get('/:id/edit', (req,res) => {
+  res.render('edit', {
+    page: 'Product Page',
+    product: dbProducts.getProduct(req)
+  })
+})
+
+//handles put request from browser
+router.post('/:id/edit', (req,res) => {
   dbProducts.editProduct(req,res);
 
 })
 
 
+router.get('/new', (req,res) => {
+  res.render('new', {
+    page: 'Product Page'
+  })
+})
+
+router.post('/new', (req,res) => {
+  dbProducts.addNewProduct(req);
+
+  res.json({success:true})
+
+})
 
 module.exports = router;

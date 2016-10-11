@@ -1,0 +1,10 @@
+mixin productList(products)
+  //-iterate through data with `each ... in ...`
+  each product in products
+    li.product name: #{product.name} id: #{product.id} price: #{product.price} inventory: #{product.inventory}
+
+//- mixin articlesList(articles)
+//-   //-iterate through data with `each ... in ...`
+//-   each article in articles
+//-     li.product name: #{article.title} author: #{article.author}
+//-       li body: #{article.body}

@@ -1,0 +1,35 @@
+extends ./layout.pug
+
+
+
+block title
+  title Articles/Products/Express
+block body
+  if page == 'Product Page'
+    - const part1 = product.name
+    - const part2 = product.price
+    - const part3 = product.inventory
+    h1#header #{page}
+    div#root
+      h3#idNumber Product ##{product.id}
+      div.entryBox
+        form(method='post' action='#')
+          input(placeholder=part1 name='name')
+          input(placeholder=part2 name='price')
+          input(placeholder=part3 name='inventory')
+          button#send Edit
+  else
+    - const part1 = article.title
+    - const part2 = article.author
+    - const part3 = article.body
+    h1#header #{page}
+    div#root
+      h3#idNumber Article: #{product.id}
+      div.entryBox
+        form(method='post' action='#')
+          input(placeholder=part1 name='title')
+          input(placeholder=part2 name='author')
+          input(placeholder=part3 name='body')
+          button#send Edit
+
+

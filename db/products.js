@@ -22,9 +22,9 @@ function getProductList() {
 //private functions
 
 function exists(req) {
-  if (productList > 0) {
+  if (productList.length > 0) {
     return productList.some(product => {
-      return product.id === req.params.id;
+      return product.id === parseFloat(req.params.id);
     })
   } else {
     return false;
@@ -60,29 +60,57 @@ function editInventory(inventory,id) {
 
 
 function editProduct(req,res) {
+  let success = false;
+  let id = parseFloat(req.params.id)
+
   if(exists(req)){
+
     let name = req.body.name;
     let price = req.body.price;
     let inventory = req.body.inventory;
 
     if (name) {
-      editName(name,req.params.id)
+      editName(name,id)
     }
     if (price) {
-      editPrice(price,req.params.id)
+      editPrice(price,id)
     }
     if (inventory) {
-      editInventory(inventory,req.params.id)
+      editInventory(inventory,id)
     }
-    res.json({success:true})
+    success = true;
 
-  } else {
-    res.json({success:false})
+  }
+  res.json({success});
+}
+
+function deleteProduct(req, res) {
+  let success = false;
+  if (exists(req)) {
+    productList = productList.filter(product => {
+      if (product.id !== parseFloat(req.params.id)) {
+        return product
+      }
+    })
+    success = true;
+  }
+  res.json({success});
+}
+
+function getProduct(req) {
+  if (exists(req)) {
+    return productList.find(product => {
+      if(product.id === parseFloat(req.params.id)) {
+        return product
+      }
+    })
   }
 }
 
 module.exports = {
   addNewProduct,
   getProductList,
-  editProduct
+  editProduct,
+  deleteProduct,
+  getProduct
 }

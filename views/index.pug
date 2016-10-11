@@ -1,0 +1,28 @@
+extends ./layout.pug
+
+block title
+  title Articles/Products/Express
+block body
+
+  if home
+    h1#header #{home}
+
+  else
+    h1#header #{page}
+    div#root
+      div.entryBox
+        if page == 'Product Page'
+          form(method='post' action='#')
+            input(placeholder='enter product name' name='name')#name
+            input(placeholder='enter price' name='price')#price
+            input(placeholder='enter amount in inventory' name='inventory')#inventory
+            button#send Enter
+        else
+          form(method='post' action='#')
+            input(placeholder='enter article title' name='title')#title
+            input(placeholder='enter article' name='body')#body
+            input(placeholder='enter article author' name ='author')#author
+            button#send Enter
+      if entered
+        div
+          p Your Product was entered

@@ -1,0 +1,15 @@
+body {
+  background-color: red;
+  font-family: 'Lato', sans-serif;
+  padding: 20px; }
+
+#root .entryBox {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  padding: 20px; }
+  #root .entryBox input {
+    flex: 0 0 150px; }
+  #root .entryBox button {
+    flex: 0 0 50px; }

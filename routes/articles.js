@@ -8,34 +8,34 @@ router.get('/', (req,res) => {
     page: 'Articles Page',
     articles: dbArticles.getArticleList()
   })
+  console.log('list',dbArticles.getArticleList())
 })
 
+//handles postman requests
+router.post('/', (req,res) => {
+  dbArticles.addNewArticle(req,res)
 
-// handles requests from postman
-router.put('/:id', (req,res) => {
-  console.log('test');
+})
+router.put('/:title', (req,res) => {
   dbArticles.editArticle(req,res);
 })
-
-router.delete('/:id', (req,res) => {
+router.delete('/:title', (req,res) => {
   dbArticles.deleteArticle(req,res);
 })
 
 
 //handles get request from browser/postman
-router.get('/:id/edit', (req,res) => {
+router.get('/:title/edit', (req,res) => {
   res.render('edit', {
-    page: 'Product Page',
-    product: dbArticles.getArticle(req)
+    page: 'Articles Page',
+    article: dbArticles.getArticle(req,res)
   })
 })
 
 //handles put request from browser
-router.post('/:id/edit', (req,res) => {
+router.post('/:title/edit', (req,res) => {
   dbArticles.editArticle(req,res);
-
 })
-
 
 router.get('/new', (req,res) => {
   res.render('new', {
@@ -44,9 +44,6 @@ router.get('/new', (req,res) => {
 })
 
 router.post('/new', (req,res) => {
-  dbArticles.addNewArticle(req);
-
-  res.json({success:true})
-
+  dbArticles.addNewArticle(req,res);
 })
 module.exports = router;

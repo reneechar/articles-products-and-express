@@ -11,15 +11,14 @@ router.get('/', (req,res) => {
 })
 
 
-//handles requests from postman
-// router.put('/:id', (req,res) => {
-//   console.log('test');
-//   dbProducts.editProduct(req,res);
-// })
+// handles requests from postman
+router.put('/:id', (req,res) => {
+  dbProducts.editProduct(req,res);
+})
 
-// router.delete('/:id', (req,res) => {
-//   dbProducts.deleteProduct(req,res);
-// })
+router.delete('/:id', (req,res) => {
+  dbProducts.deleteProduct(req,res);
+})
 
 
 //handles get request from browser/postman

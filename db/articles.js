@@ -2,14 +2,28 @@
 
 let articleList = [];
 
+function generateURLEncoded(str) {
+  return str.split(' ').join('-');
+}
 
-function addNewArticle(req) {
-  const article = {
-    title: req.body.title,
-    author: req.body.author,
-    body: req.body.body
+function unEncodeURL(str) {
+  return str.split('-').join(' ');
+}
+
+
+function addNewArticle(req,res) {
+  let success = false;
+  if (!exists(req)) {
+    const article = {
+      title: req.body.title,
+      author: req.body.author,
+      body: req.body.body,
+      urlTitle: generateURLEncoded(req.body.title)
+    }
+    articleList.push(article);
+    success = true;
   }
-  articleList.push(article);
+  res.json({success});
 }
 
 function getArticleList() {
@@ -18,38 +32,39 @@ function getArticleList() {
 
 //private functions
 
-function exists(req) {
+function exists(title) {
   if (articleList.length > 0) {
     return articleList.some(article => {
-      return article.title === req.params.title;
+      return article.title === title;
     })
   } else {
     return false;
   }
 }
 
-function editTitle(oldTitle, title) {
+function editTitle(title,oldTitle) {
   articleList = articleList.map(article => {
     if (article.title === oldTitle) {
       article.title = title;
+      article.urlTitle = generateURLEncoded(title);
     }
     return article
   })
 }
 
-function editPrice(price,title) {
+function editAuthor(author,title) {
   articleList = articleList.map(article => {
     if (article.title === title) {
-      article.price = price;
+      article.author = author;
     }
     return article
   })
 }
 
-function editInventory(inventory,title) {
+function editBody(body,title) {
   articleList = articleList.map(article => {
     if (article.title === title) {
-      article.inventory = inventory;
+      article.body = body;
     }
     return article
   })
@@ -58,21 +73,22 @@ function editInventory(inventory,title) {
 
 function editArticle(req,res) {
   let success = false;
-  let title = req.params.title
-
-  if(exists(req)){
+  let URLOldTitle = req.params.title
+  let oldTitle = unEncodeURL(URLOldTitle)
+  if(exists(oldTitle)){
 
     let author = req.body.author;
     let body = req.body.body;
+    let newTitle = req.body.title;
 
-    if (name) {
-      editTitle(name,title)
+    if (newTitle) {
+      editTitle(newTitle,oldTitle)
     }
-    if (price) {
-      editPrice(price,title)
+    if (author) {
+      editAuthor(author,newTitle)
     }
-    if (inventory) {
-      editInventory(inventory,title)
+    if (body) {
+      editBody(body,newTitle)
     }
     success = true;
 
@@ -82,9 +98,9 @@ function editArticle(req,res) {
 
 function deleteArticle(req, res) {
   let success = false;
-  if (exists(req)) {
+  if (exists(req.params.title)) {
     articleList = articleList.filter(article => {
-      if (article.title !== parseFloat(req.params.title)) {
+      if (article.title !== req.params.title) {
         return article
       }
     })
@@ -93,13 +109,17 @@ function deleteArticle(req, res) {
   res.json({success});
 }
 
-function getArticle(req) {
-  if (exists(req)) {
+function getArticle(req,res) {
+  let success = false;
+  let title = unEncodeURL(req.params.title);
+  if (exists(title)) {
     return articleList.find(article => {
-      if(article.title === req.body.title) {
+      if(article.title === title) {
         return article
       }
     })
+  } else {
+    res.json({success})
   }
 }
 

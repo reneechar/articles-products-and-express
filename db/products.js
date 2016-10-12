@@ -1,4 +1,7 @@
 //module with helper methods to retrieve data
+const express = require('express');
+const fs = require('file-system');
+const moment = require('moment');
 
 let productList = [];
 
@@ -107,10 +110,58 @@ function getProduct(req) {
   }
 }
 
+function analyticsTracker(req,res,next) {
+  if(req.route === undefined) {
+    next();
+  }
+  let method = req.method.toLowerCase();
+  let uri = `/products${req.route.path}`;
+  let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
+  let nowDate = timestamp.split('.').slice(0,3).join('.');
+
+  let newData = `[${method}] [${uri}] [${timestamp}]
+`
+
+  //look through logs directory to see if date file exists
+  let found = false;
+  fs.readdir('./logs', (err,logFiles) => {
+    if (err) {
+      console.error(err);
+    } else {
+      logFiles.forEach(log => {
+        let fileDate = log.split('.').slice(0,3).join('.')
+
+        if (nowDate === fileDate) {
+          found = true;
+          fs.readFile(`./logs/${log}`, (err,data) => {
+            if (err) {
+              console.error(err);
+            } else {
+              let editFile = fs.createWriteStream(`./logs/${log}`)
+              editFile.write(data.toString())
+              editFile.end(newData);
+            }
+          })
+        }
+      })
+      if (!found) {
+        fs.writeFile(`./logs/${nowDate}.log`,newData);
+      }
+      next();
+    }
+  })
+}
+
+function payloadValidation(req,res,next) {
+  //body
+}
+
 module.exports = {
   addNewProduct,
   getProductList,
   editProduct,
   deleteProduct,
-  getProduct
+  getProduct,
+  analyticsTracker,
+  payloadValidation,
 }

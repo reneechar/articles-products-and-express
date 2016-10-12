@@ -5,6 +5,10 @@ const dbProducts = require('../db/products.js');
 
 const page = 'Product Page';
 
+//middleware
+router.use(dbProducts.analyticsTracker);
+
+
 router.get('/', (req,res) => {
   res.render('index', {
     page,

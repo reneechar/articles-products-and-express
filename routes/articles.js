@@ -5,6 +5,10 @@ const dbArticles = require('../db/articles.js')
 
 const page = 'Articles Page';
 
+//middleware
+router.use(dbArticles.analyticsTracker);
+
+
 router.route('/')
   .get((req,res) => {
     res.render('index', {

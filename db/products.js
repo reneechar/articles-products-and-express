@@ -110,12 +110,21 @@ function getProduct(req) {
   }
 }
 
+function getURI(req) {
+  if (req.params.id) {
+    let id = req.params.id;
+    return `/products/${id}/edit`
+  } else {
+    return `/products${req.route.path}`
+  }
+}
+
 function analyticsTracker(req,res,next) {
   if(req.route === undefined) {
     next();
   }
   let method = req.method.toLowerCase();
-  let uri = `/products${req.route.path}`;
+  let uri = getURI(req);
   let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
   let nowDate = timestamp.split('.').slice(0,3).join('.');
 

@@ -128,12 +128,22 @@ function getArticle(req,res) {
   }
 }
 
+function getURI(req) {
+  if (req.params.title) {
+    let title = req.params.title;
+    return `/articles/${title}/edit`
+  } else {
+    return `/articles${req.route.path}`
+  }
+}
+
+
 function analyticsTracker(req,res,next) {
   if(req.route === undefined) {
     next();
   }
   let method = req.method.toLowerCase();
-  let uri = `/articles${req.route.path}`;
+  let uri = getURI(req);
   let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
   let nowDate = timestamp.split('.').slice(0,3).join('.');
 

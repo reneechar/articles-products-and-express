@@ -3,50 +3,45 @@ const router = express.Router();
 const fs = require('file-system');
 const dbProducts = require('../db/products.js');
 
+const page = 'Product Page';
+
 router.get('/', (req,res) => {
   res.render('index', {
-    page: 'Product Page',
+    page,
     products: dbProducts.getProductList()
   })
 })
 
-
 // handles requests from postman
-router.put('/:id', (req,res) => {
-  dbProducts.editProduct(req,res);
-})
-
-router.delete('/:id', (req,res) => {
-  dbProducts.deleteProduct(req,res);
-})
-
+router.route('/:id')
+  .put((req,res) => {
+    dbProducts.editProduct(req,res);
+  })
+  .delete((req,res) => {
+    dbProducts.deleteProduct(req,res);
+  })
 
 //handles get request from browser/postman
-router.get('/:id/edit', (req,res) => {
-  res.render('edit', {
-    page: 'Product Page',
-    product: dbProducts.getProduct(req)
+router.route('/:id/edit')
+  .get((req,res) => {
+    res.render('edit', {
+      page,
+      product: dbProducts.getProduct(req)
+    })
   })
-})
-
-//handles put request from browser
-router.post('/:id/edit', (req,res) => {
-  dbProducts.editProduct(req,res);
-
-})
-
-
-router.get('/new', (req,res) => {
-  res.render('new', {
-    page: 'Product Page'
+  .post((req,res) => {
+    dbProducts.editProduct(req,res);
   })
-})
 
-router.post('/new', (req,res) => {
-  dbProducts.addNewProduct(req);
-
-  res.json({success:true})
-
-})
+router.route('/new')
+  .get((req,res) => {
+    res.render('new', {
+      page
+    })
+  })
+  .post((req,res) => {
+    dbProducts.addNewProduct(req);
+    res.json({success:true})
+  })
 
 module.exports = router;

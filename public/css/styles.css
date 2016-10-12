@@ -1,15 +1,84 @@
 body {
-  background-color: red;
   font-family: 'Lato', sans-serif;
   padding: 20px; }
 
-#root .entryBox {
-  width: 150px;
+#root {
   display: flex;
-  justify-content: center;
+  flex-flow: row wrap; }
+  #root .entryBox {
+    display: flex;
+    flex-flow: row wrap;
+    background-color: #87B8C2;
+    width: 200px;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 20%; }
+    #root .entryBox form {
+      display: flex;
+      flex-flow: row wrap;
+      flex: 0 0 200px; }
+      #root .entryBox form input {
+        flex: 0 0 170px;
+        margin: 1px; }
+      #root .entryBox form button {
+        margin: 2px;
+        flex: 0 0 50px; }
+
+ul {
+  display: flex;
+  flex-flow: row wrap; }
+  ul li {
+    flex: 0 0 200px;
+    list-style: none;
+    padding: 10px;
+    margin: 5px;
+    background-color: #87B8C2;
+    text-align: center;
+    border-radius: 20%; }
+    ul li a {
+      text-decoration: none;
+      color: black; }
+      ul li a:hover {
+        color: white; }
+
+#linkContainer {
+  display: flex;
   flex-flow: row wrap;
-  padding: 20px; }
-  #root .entryBox input {
-    flex: 0 0 150px; }
-  #root .entryBox button {
-    flex: 0 0 50px; }
+  margin: 20px; }
+  #linkContainer .homePage {
+    flex: 0 0 200px;
+    background-color: #E1CD6D;
+    margin: 5px;
+    border-radius: 20%;
+    padding: 10px;
+    text-align: center; }
+    #linkContainer .homePage:hover {
+      background-color: #B1748F; }
+      #linkContainer .homePage:hover a {
+        color: white; }
+    #linkContainer .homePage a {
+      text-decoration: none;
+      color: black; }
+
+#newPage {
+  padding-left: 20px;
+  display: flex;
+  flex-flow: row wrap; }
+  #newPage .addNew {
+    display: flex;
+    flex-flow: row wrap;
+    flex: 0 0 150px;
+    margin-left: 20px;
+    background-color: #E1CD6D;
+    padding: 20px;
+    border-radius: 20%; }
+    #newPage .addNew:hover {
+      background-color: #B1748F; }
+      #newPage .addNew:hover a {
+        color: white; }
+    #newPage .addNew a {
+      text-decoration: none;
+      color: black; }
+
+.container {
+  width: 100%; }

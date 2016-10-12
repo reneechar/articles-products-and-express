@@ -1,23 +1,107 @@
+$block-Color: #87B8C2;
+$button-Color: #E1CD6D;
+$hover-button: #B1748F;
+
+//mixins
+@mixin flexParent() {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+@mixin hoverColor() {
+  &:hover {
+    background-color: $hover-button;
+    a {
+      color: white;
+    }
+  }
+  a {
+      text-decoration: none;
+      color: black;
+    }
+}
+
+
 body {
-  background-color: red;
   font-family: 'Lato', sans-serif;
   padding: 20px;
 }
 
 
 #root {
-
+  @include flexParent();
   .entryBox {
-    width: 150px;
-    display: flex;
+    @include flexParent();
+    background-color: $block-Color;
+    width: 200px;
     justify-content: center;
-    flex-flow: row wrap;
     padding: 20px;
-    input {
-      flex: 0 0 150px;
-    }
-    button {
-      flex: 0 0 50px;
+    border-radius: 20%;
+    form {
+      @include flexParent();
+      flex: 0 0 200px;
+      input {
+        flex: 0 0 170px;
+        margin: 1px;
+      }
+      button {
+        margin: 2px;
+        flex: 0 0 50px;
+      }
     }
   }
+}
+
+ul {
+  @include flexParent();
+  li {
+    flex: 0 0 200px;
+    list-style: none;
+    padding: 10px;
+    margin: 5px;
+    background-color: $block-Color;
+    text-align: center;
+    border-radius: 20%;
+    a {
+      text-decoration: none;
+      color: black;
+      &:hover {
+        color: white;
+      }
+    }
+  }
+
+}
+
+#linkContainer {
+  @include flexParent();
+  margin: 20px;
+
+  .homePage {
+    flex: 0 0 200px;
+    background-color: $button-Color;
+    margin: 5px;
+    border-radius: 20%;
+    padding: 10px;
+    text-align: center;
+    @include hoverColor();
+  }
+}
+
+#newPage {
+  padding-left: 20px;
+  @include flexParent();
+  .addNew {
+    @include flexParent();
+    flex: 0 0 150px;
+    margin-left: 20px;
+    background-color: $button-Color;
+    padding: 20px;
+    border-radius: 20%;
+    @include hoverColor();
+  }
+}
+
+.container {
+  width: 100%;
 }

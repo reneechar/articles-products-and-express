@@ -10,8 +10,13 @@ block body
 
   if home
     h1#header #{home}
-
-
+      div#linkContainer
+        div#articlePage.homePage
+          a(href ='/articles')
+            h5 Article Home
+        div#productPage.homePage
+          a(href ='/products')
+            h5 Product Home
 
   else
     h1#header #{page}
@@ -19,11 +24,18 @@ block body
     if page == 'Product Page'
 
       div#root
-        div#currentProductsBox
-          ul
-            +productList(products)
+        div#currentProductsBox.container
+          +productList(products)
+      div#newPage
+        div.addNew
+          a(href= 'products/new')
+            h3 Add New Product
+
     else
       div#root
-        div#currentArticlesBox
-          ul
-            +articlesList(articles)
+        div#currentArticlesBox.container
+          +articlesList(articles)
+      div#newPage
+        div.addNew
+          a(href= 'articles/new')
+            h3 Add New Article

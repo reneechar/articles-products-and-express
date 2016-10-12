@@ -1,9 +1,24 @@
 mixin productList(products)
   //-iterate through data with `each ... in ...`
-  each product in products
-    li.product name: #{product.name} id: #{product.id} price: #{product.price} inventory: #{product.inventory}
+
+  ul
+    each product in products
+      li.product
+        - const route ='/products/' + product.id + '/edit'
+        a(href=route)
+          h3 #{product.name}
+          p.product id: #{product.id}
+          p.product price: #{product.price}
+          p.product inventory: #{product.inventory}
 
 mixin articlesList(articles)
   //-iterate through data with `each ... in ...`
-  each article in articles
-    li.article title: #{article.title} author: #{article.author} body: #{article.body} urlEncodedTitle: #{article.urlTitle}
+  ul
+    each article in articles
+      li.article
+        - const route = '/articles/' + article.urlTitle + '/edit'
+        a(href=route)
+          h3 #{article.title}
+          p.article urlEncodedTitle: #{article.urlTitle}
+          p.article author: #{article.author}
+          p.article body: #{article.body}

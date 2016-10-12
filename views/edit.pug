@@ -1,15 +1,13 @@
 extends ./layout.pug
 
-
-
 block title
   title Articles/Products/Express
 block body
 
   if page == 'Product Page'
     h1#header #{page}
+    h3#idNumber Product ##{product.id}
     div#root
-      h3#idNumber Product ##{product.id}
       div.entryBox
         form(method='post' action='#')
           input(placeholder=product.name name='name')
@@ -18,13 +16,11 @@ block body
           button#send Edit
   else
     h1#header #{page}
+    h3#title Article: #{article.title}
     div#root
-      h3#idNumber Article: #{article.title}
       div.entryBox
         form(method='post' action='#')
           input(placeholder=article.title name='title')
           input(placeholder=article.author name='author')
           input(placeholder=article.body name='body')
           button#send Edit
-
-

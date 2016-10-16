@@ -16,9 +16,9 @@ mixin articlesList(articles)
   ul
     each article in articles
       li.article
-        - const route = '/articles/' + article.urlTitle + '/edit'
+        - const route = '/articles/' + article.url_title + '/edit'
         a(href=route)
           h3 #{article.title}
-          p.article urlEncodedTitle: #{article.urlTitle}
+          p.article urlEncodedTitle: #{article.url_title}
           p.article author: #{article.author}
           p.article body: #{article.body}

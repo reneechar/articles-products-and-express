@@ -2,6 +2,8 @@
 const express = require('express');
 const fs = require('file-system');
 const moment = require('moment');
+const db = require('./connection.js');
+
 
 let productList = [];
 
@@ -14,59 +16,69 @@ function addNewProduct(req) {
     price: parseFloat(req.body.price),
     inventory: parseFloat(req.body.inventory)
   }
-  idNumber++;
-  productList.push(product);
+  return db.query('INSERT INTO products(name,price,inventory) VALUES (${name},${price},${inventory})',product)
 }
 
 function getProductList() {
-  return productList
+  return db.query('SELECT * FROM products ORDER BY name')
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 //private functions
 
-function exists(req) {
-  if (productList.length > 0) {
-    return productList.some(product => {
-      return product.id === parseFloat(req.params.id);
+function exists(id) {
+  return db.query('SELECT COUNT(*) FROM products WHERE id = $1',id)
+    .then(done => {
+      return parseInt(done[0].count) > 0;
     })
-  } else {
-    return false;
-  }
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 function editName(name, id) {
-  productList = productList.map(product => {
-    if (product.id === id) {
-      product.name = name;
-    }
-    return product
-  })
+  const n = {
+    id,
+    name
+  }
+
+  db.query('UPDATE products SET name = ${name} WHERE id = ${id}', n)
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 function editPrice(price,id) {
-  productList = productList.map(product => {
-    if (product.id === id) {
-      product.price = price;
-    }
-    return product
-  })
+  const p = {
+    id,
+    price
+  }
+
+  db.query('UPDATE products SET price = ${price} WHERE id = ${id}',p)
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 function editInventory(inventory,id) {
-  productList = productList.map(product => {
-    if (product.id === id) {
-      product.inventory = inventory;
-    }
-    return product
-  })
+  const i = {
+    id,
+    inventory
+  }
+
+  db.query('UPDATE products SET inventory = ${inventory} WHERE id = ${id}',i)
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 
-function editProduct(req,res) {
-  let success = false;
+function editProduct(req) {
   let id = parseFloat(req.params.id)
 
-  if(exists(req)){
+  if(exists(id)){
 
     let name = req.body.name;
     let price = req.body.price;
@@ -81,33 +93,19 @@ function editProduct(req,res) {
     if (inventory) {
       editInventory(inventory,id)
     }
-    success = true;
-
+    return true;
+  } else {
+    return false;
   }
-  res.json({success});
 }
 
-function deleteProduct(req, res) {
-  let success = false;
-  if (exists(req)) {
-    productList = productList.filter(product => {
-      if (product.id !== parseFloat(req.params.id)) {
-        return product
-      }
-    })
-    success = true;
-  }
-  res.json({success});
+function deleteProduct(id) {
+  return db.query('DELETE FROM products WHERE id = $1',parseInt(id))
 }
 
-function getProduct(req) {
-  if (exists(req)) {
-    return productList.find(product => {
-      if(product.id === parseFloat(req.params.id)) {
-        return product
-      }
-    })
-  }
+function getProduct(id) {
+
+  return db.query('SELECT * FROM products WHERE id = $1',parseInt(id))
 }
 
 function getURI(req) {

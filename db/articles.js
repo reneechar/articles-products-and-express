@@ -2,7 +2,7 @@
 const express = require('express');
 const fs = require('file-system');
 const moment = require('moment');
-
+const db = require('./connection.js');
 
 
 let articleList = [];
@@ -18,73 +18,101 @@ function unEncodeURL(str) {
 
 function addNewArticle(req,res) {
   let success = false;
-  if (!exists(req)) {
-    const article = {
-      title: req.body.title,
-      author: req.body.author,
-      body: req.body.body,
-      urlTitle: generateURLEncoded(req.body.title)
-    }
-    articleList.push(article);
-    success = true;
+  const article = {
+    title: req.body.title,
+    author: req.body.author,
+    body: req.body.body,
+    url_title: generateURLEncoded(req.body.title)
   }
-  res.json({success});
+  return db.query('INSERT INTO articles (title,author,body,url_title) VALUES (${title},${author},${body},${url_title})', article)
+    .then(s => {
+      success = true;
+      res.json({success})
+    })
+    .catch(error => {
+      console.error(error);
+      res.json({success});
+    })
 }
 
 function getArticleList() {
-  return articleList
+  return db.query('SELECT * FROM articles ORDER BY title')
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 //private functions
 
 function exists(title) {
-  if (articleList.length > 0) {
-    return articleList.some(article => {
-      return article.title === title;
+  //search through database and return true or false
+  return db.query('SELECT COUNT(*) FROM articles WHERE title = $1',title)
+    .then(done => {
+      return parseInt(done[0].count) > 0;
     })
-  } else {
-    return false;
-  }
+    .catch(err => {
+      console.error(err);
+    });
 }
 
 function editTitle(title,oldTitle) {
-  articleList = articleList.map(article => {
-    if (article.title === oldTitle) {
-      article.title = title;
-      article.urlTitle = generateURLEncoded(title);
-    }
-    return article
-  })
+
+  const t = {
+    title,
+    oldTitle,
+    url_title: generateURLEncoded(title)
+  }
+
+  db.query('UPDATE articles SET title = ${title} WHERE title = ${oldTitle}',t)
+    .then(done => {
+      db.query('UPDATE articles SET url_title = ${url_title} WHERE title = ${title}',t)
+        .catch(err => {
+          console.error(err);
+        })
+    })
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 function editAuthor(author,title) {
-  articleList = articleList.map(article => {
-    if (article.title === title) {
-      article.author = author;
-    }
-    return article
-  })
+  const a = {
+    author,
+    title
+  }
+
+  db.query('UPDATE articles SET author = ${author} WHERE title = ${title}',a)
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 function editBody(body,title) {
-  articleList = articleList.map(article => {
-    if (article.title === title) {
-      article.body = body;
-    }
-    return article
-  })
+  const b = {
+    body,
+    title
+  }
+
+  db.query('UPDATE articles SET body = ${body} WHERE title = ${title}',b)
+    .catch(err => {
+      console.error(err);
+    })
 }
 
 
-function editArticle(req,res) {
-  let success = false;
-  let URLOldTitle = req.params.title
-  let oldTitle = unEncodeURL(URLOldTitle)
+function editArticle(req) {
+  let URLOldTitle = req.params.title;
+  let oldTitle = unEncodeURL(URLOldTitle);
   if(exists(oldTitle)){
 
     let author = req.body.author;
     let body = req.body.body;
-    let newTitle = req.body.title;
+    let newTitle;
+    if (req.body.title) {
+      newTitle = req.body.title;
+    } else {
+      newTitle = oldTitle;
+    }
 
     if (newTitle) {
       editTitle(newTitle,oldTitle)
@@ -95,37 +123,18 @@ function editArticle(req,res) {
     if (body) {
       editBody(body,newTitle)
     }
-    success = true;
-
-  }
-  res.json({success});
-}
-
-function deleteArticle(req, res) {
-  let success = false;
-  if (exists(req.params.title)) {
-    articleList = articleList.filter(article => {
-      if (article.title !== req.params.title) {
-        return article
-      }
-    })
-    success = true;
-  }
-  res.json({success});
-}
-
-function getArticle(req,res) {
-  let success = false;
-  let title = unEncodeURL(req.params.title);
-  if (exists(title)) {
-    return articleList.find(article => {
-      if(article.title === title) {
-        return article
-      }
-    })
+    return true;
   } else {
-    res.json({success})
+    return false;
   }
+}
+
+function deleteArticle(url_title) {
+  return db.query('DELETE FROM articles WHERE url_title = $1',url_title)
+}
+
+function getArticle(title) {
+  return db.query('SELECT * FROM articles WHERE title = $1',unEncodeURL(title))
 }
 
 function getURI(req) {

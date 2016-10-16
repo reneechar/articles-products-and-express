@@ -6,15 +6,18 @@ const dbArticles = require('../db/articles.js')
 const page = 'Articles Page';
 
 //middleware
-router.use(dbArticles.analyticsTracker);
+// router.use(dbArticles.analyticsTracker);
 
 
 router.route('/')
   .get((req,res) => {
-    res.render('index', {
-      page,
-      articles: dbArticles.getArticleList()
-    })
+    dbArticles.getArticleList()
+      .then(table => {
+        res.render('index', {
+          page,
+          articles: table
+        })
+      })
   })
   .post((req,res) => {
     dbArticles.addNewArticle(req,res)
@@ -22,21 +25,38 @@ router.route('/')
 
 router.route('/:title')
   .put((req,res) => {
-    dbArticles.editArticle(req,res);
+    let success = false;
+    if (dbArticles.editArticle(req)) {
+      success = true;
+    }
+    res.json({success});
   })
   .delete((req,res) => {
-    dbArticles.deleteArticle(req,res);
+    dbArticles.deleteArticle(req.params.title)
+      .then(done => {
+        res.json({success: true});
+      })
+      .catch(err => {
+        res.json({success: false});
+      })
   })
 
 router.route('/:title/edit')
   .get((req,res) => {
-    res.render('edit', {
-      page,
-      article: dbArticles.getArticle(req,res)
-    })
+    dbArticles.getArticle(req.params.title)
+      .then(table => {
+        res.render('edit', {
+          page,
+          article: table[0]
+        })
+      })
   })
   .post((req,res) => {
-    dbArticles.editArticle(req,res);
+    let success = false;
+    if(dbArticles.editArticle(req)) {
+      success = true;
+    }
+    res.json({success});
   })
 
 router.route('/new')

@@ -5,11 +5,8 @@ const dbProducts = require('../db/products.js');
 
 const page = 'Product Page';
 
-//middleware
-// router.use(dbProducts.analyticsTracker);
 
-
-router.get('/', (req,res) => {
+router.get('/', dbProducts.analyticsTracker, (req,res) => {
   dbProducts.getProductList()
     .then(table => {
       res.render('index', {
@@ -21,14 +18,14 @@ router.get('/', (req,res) => {
 
 // handles requests from postman
 router.route('/:id')
-  .put((req,res) => {
+  .put(dbProducts.analyticsTracker, (req,res) => {
     let success = false;
     if (dbProducts.editProduct(req)){
       success = true;
     }
     res.json({success});
   })
-  .delete((req,res) => {
+  .delete(dbProducts.analyticsTracker, (req,res) => {
     dbProducts.deleteProduct(req.params.id)
       .then(done => {
         res.json({success: true});
@@ -40,7 +37,7 @@ router.route('/:id')
 
 //handles get request from browser/postman
 router.route('/:id/edit')
-  .get((req,res) => {
+  .get(dbProducts.analyticsTracker, (req,res) => {
     dbProducts.getProduct(req.params.id)
       .then(table => {
         res.render('edit', {
@@ -49,7 +46,7 @@ router.route('/:id/edit')
         })
       })
   })
-  .post((req,res) => {
+  .post(dbProducts.analyticsTracker, (req,res) => {
     let success = false;
     if (dbProducts.editProduct(req)) {
       success = true;
@@ -58,12 +55,12 @@ router.route('/:id/edit')
   })
 
 router.route('/new')
-  .get((req,res) => {
+  .get(dbProducts.analyticsTracker, (req,res) => {
     res.render('new', {
       page
     })
   })
-  .post((req,res) => {
+  .post(dbProducts.analyticsTracker, (req,res) => {
     dbProducts.addNewProduct(req)
       .then(done => {
         res.json({success:true})

@@ -150,43 +150,44 @@ function getURI(req) {
 function analyticsTracker(req,res,next) {
   if(req.route === undefined) {
     next();
-  }
-  let method = req.method.toLowerCase();
-  let uri = getURI(req);
-  let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
-  let nowDate = timestamp.split('.').slice(0,3).join('.');
+  } else {
+    let method = req.method.toLowerCase();
+    let uri = getURI(req);
+    let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
+    let nowDate = timestamp.split('.').slice(0,3).join('.');
 
-  let newData = `[${method}] [${uri}] [${timestamp}]
+    let newData = `[${method}] [${uri}] [${timestamp}]
 `
 
-  //look through logs directory to see if date file exists
-  let found = false;
-  fs.readdir('./logs', (err,logFiles) => {
-    if (err) {
-      console.error(err);
-    } else {
-      logFiles.forEach(log => {
-        let fileDate = log.split('.').slice(0,3).join('.')
+    //look through logs directory to see if date file exists
+    let found = false;
+    fs.readdir('./logs', (err,logFiles) => {
+      if (err) {
+        console.error(err);
+      } else {
+        logFiles.forEach(log => {
+          let fileDate = log.split('.').slice(0,3).join('.')
 
-        if (nowDate === fileDate) {
-          found = true;
-          fs.readFile(`./logs/${log}`, (err,data) => {
-            if (err) {
-              console.error(err);
-            } else {
-              let editFile = fs.createWriteStream(`./logs/${log}`)
-              editFile.write(data.toString())
-              editFile.end(newData);
-            }
-          })
+          if (nowDate === fileDate) {
+            found = true;
+            fs.readFile(`./logs/${log}`, (err,data) => {
+              if (err) {
+                console.error(err);
+              } else {
+                let editFile = fs.createWriteStream(`./logs/${log}`)
+                editFile.write(data.toString())
+                editFile.end(newData);
+              }
+            })
+          }
+        })
+        if (!found) {
+          fs.writeFile(`./logs/${nowDate}.log`,newData);
         }
-      })
-      if (!found) {
-        fs.writeFile(`./logs/${nowDate}.log`,newData);
+        next();
       }
-      next();
-    }
-  })
+    })
+  }
 }
 
 

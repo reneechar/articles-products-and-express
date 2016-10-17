@@ -5,13 +5,8 @@ const moment = require('moment');
 const db = require('./connection.js');
 
 
-let productList = [];
-
-let idNumber = 1;
-
 function addNewProduct(req) {
   const product = {
-    id: idNumber,
     name: req.body.name,
     price: parseFloat(req.body.price),
     inventory: parseFloat(req.body.inventory)
@@ -104,7 +99,6 @@ function deleteProduct(id) {
 }
 
 function getProduct(id) {
-
   return db.query('SELECT * FROM products WHERE id = $1',parseInt(id))
 }
 
@@ -120,43 +114,44 @@ function getURI(req) {
 function analyticsTracker(req,res,next) {
   if(req.route === undefined) {
     next();
-  }
-  let method = req.method.toLowerCase();
-  let uri = getURI(req);
-  let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
-  let nowDate = timestamp.split('.').slice(0,3).join('.');
+  } else {
+    let method = req.method.toLowerCase();
+    let uri = getURI(req);
+    let timestamp = moment().format('YYYY.MM.DD.h.mm.ss.a');
+    let nowDate = timestamp.split('.').slice(0,3).join('.');
 
-  let newData = `[${method}] [${uri}] [${timestamp}]
+    let newData = `[${method}] [${uri}] [${timestamp}]
 `
 
-  //look through logs directory to see if date file exists
-  let found = false;
-  fs.readdir('./logs', (err,logFiles) => {
-    if (err) {
-      console.error(err);
-    } else {
-      logFiles.forEach(log => {
-        let fileDate = log.split('.').slice(0,3).join('.')
+    //look through logs directory to see if date file exists
+    let found = false;
+    fs.readdir('./logs', (err,logFiles) => {
+      if (err) {
+        console.error(err);
+      } else {
+        logFiles.forEach(log => {
+          let fileDate = log.split('.').slice(0,3).join('.')
 
-        if (nowDate === fileDate) {
-          found = true;
-          fs.readFile(`./logs/${log}`, (err,data) => {
-            if (err) {
-              console.error(err);
-            } else {
-              let editFile = fs.createWriteStream(`./logs/${log}`)
-              editFile.write(data.toString())
-              editFile.end(newData);
-            }
-          })
+          if (nowDate === fileDate) {
+            found = true;
+            fs.readFile(`./logs/${log}`, (err,data) => {
+              if (err) {
+                console.error(err);
+              } else {
+                let editFile = fs.createWriteStream(`./logs/${log}`)
+                editFile.write(data.toString())
+                editFile.end(newData);
+              }
+            })
+          }
+        })
+        if (!found) {
+          fs.writeFile(`./logs/${nowDate}.log`,newData);
         }
-      })
-      if (!found) {
-        fs.writeFile(`./logs/${nowDate}.log`,newData);
+        next();
       }
-      next();
-    }
-  })
+    })
+  }
 }
 
 function payloadValidation(req,res,next) {

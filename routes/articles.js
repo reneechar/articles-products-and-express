@@ -5,8 +5,9 @@ const dbArticles = require('../db/articles.js')
 
 const page = 'Articles Page';
 
+
 router.route('/')
-  .get(dbArticles.analyticsTracker, (req,res) => {
+  .get(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     dbArticles.getArticleList()
       .then(table => {
         res.render('index', {
@@ -15,19 +16,19 @@ router.route('/')
         })
       })
   })
-  .post(dbArticles.analyticsTracker, (req,res) => {
+  .post(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     dbArticles.addNewArticle(req,res)
   })
 
 router.route('/:title')
-  .put(dbArticles.analyticsTracker, (req,res) => {
+  .put(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     let success = false;
     if (dbArticles.editArticle(req)) {
       success = true;
     }
     res.json({success});
   })
-  .delete(dbArticles.analyticsTracker, (req,res) => {
+  .delete(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     dbArticles.deleteArticle(req.params.title)
       .then(done => {
         res.json({success: true});
@@ -38,7 +39,7 @@ router.route('/:title')
   })
 
 router.route('/:title/edit')
-  .get(dbArticles.analyticsTracker, (req,res) => {
+  .get(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     dbArticles.getArticle(req.params.title)
       .then(table => {
         res.render('edit', {
@@ -47,7 +48,7 @@ router.route('/:title/edit')
         })
       })
   })
-  .post(dbArticles.analyticsTracker, (req,res) => {
+  .post(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     let success = false;
     if(dbArticles.editArticle(req)) {
       success = true;
@@ -56,12 +57,12 @@ router.route('/:title/edit')
   })
 
 router.route('/new')
-  .get(dbArticles.analyticsTracker, (req,res) => {
+  .get(dbArticles.analyticsTracker, dbArticles.checkHeader, (req,res) => {
     res.render('new', {
       page
     })
   })
-  .post(dbArticles.analyticsTracker, dbArticles.payloadValidation, (req,res) => {
+  .post(dbArticles.analyticsTracker, dbArticles.payloadValidation, dbArticles.checkHeader, (req,res) => {
     dbArticles.addNewArticle(req,res);
   })
 

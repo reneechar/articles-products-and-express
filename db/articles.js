@@ -213,6 +213,19 @@ function payloadValidation(req,res,next) {
   }
 }
 
+function checkHeader(req,res,next) {
+  // if (req.headers.version === undefined) {
+  //   res.json({
+  //     error: 'bad headers'
+  //   })
+  // } else {
+  //   next();
+  // }
+  //comment out above code and remove the line below if you would like to check
+  //that this middleware is working.
+  //WARNING - the articles webpage will not work if the above code is used.
+  next();
+}
 
 module.exports = {
   addNewArticle,
@@ -221,5 +234,6 @@ module.exports = {
   deleteArticle,
   getArticle,
   analyticsTracker,
-  payloadValidation
+  payloadValidation,
+  checkHeader
 }

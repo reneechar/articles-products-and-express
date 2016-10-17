@@ -61,7 +61,7 @@ router.route('/new')
       page
     })
   })
-  .post(dbArticles.analyticsTracker, (req,res) => {
+  .post(dbArticles.analyticsTracker, dbArticles.payloadValidation, (req,res) => {
     dbArticles.addNewArticle(req,res);
   })
 

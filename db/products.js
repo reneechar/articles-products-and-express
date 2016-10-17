@@ -155,7 +155,68 @@ function analyticsTracker(req,res,next) {
 }
 
 function payloadValidation(req,res,next) {
-  //body
+  //validate that new products have a name, correct type for inventory and price
+  let p;
+  if (req.body.price.charAt(0) === '$') {
+    p = parseInt(req.body.price.substring(1)) || 0;
+    req.body.price = req.body.price.substring(1);
+  } else {
+    p = parseInt(req.body.price) || 0;
+  }
+
+  let i = parseInt(req.body.inventory) || 0;
+
+  if (req.body.name === '') {
+    res.json({
+      success: false,
+      error: 'Product Name must be defined'
+    })
+  } else if (p === '' || p === 0) {
+    res.json({
+      success: false,
+      error: 'Price must be defined and must be a number'
+    })
+  } else if (i === '' || i === 0) {
+    res.json({
+      success: false,
+      error: 'Inventory must be defined and must be a number'
+    })
+  } else {
+    next();
+  }
+}
+
+function editPageValidation(req,res,next) {
+  //validate that edits have the correct data type for price and inventory
+  let p;
+  if (req.body.price.charAt(0) === '$') {
+    p = parseInt(req.body.price.substring(1)) || 0;
+    req.body.price = req.body.price.substring(1);
+  } else if (req.body.price === ''){
+    p = 1;
+  } else {
+    p = parseInt(req.body.price) || 0;
+  }
+  let i;
+  if (req.body.inventory === '') {
+    i = 1;
+  } else {
+    i = parseInt(req.body.inventory) || 0;
+  }
+
+  if (p === 0) {
+    res.json({
+      success: false,
+      error: 'Price must be a number type'
+    })
+  } else if (i === 0) {
+    res.json({
+      success: false,
+      error: 'Inventory must be a number type'
+    })
+  } else {
+    next();
+  }
 }
 
 module.exports = {
@@ -166,4 +227,5 @@ module.exports = {
   getProduct,
   analyticsTracker,
   payloadValidation,
+  editPageValidation
 }

@@ -190,6 +190,29 @@ function analyticsTracker(req,res,next) {
   }
 }
 
+function payloadValidation(req,res,next) {
+  //validate that new articles have a title, a body and an author
+
+  if (req.body.title === '') {
+    res.json({
+      success: false,
+      error: 'Title was not defined'
+    });
+  } else if (req.body.author === '') {
+    res.json({
+      success: false,
+      error: 'Author was not defined'
+    });
+  } else if (req.body.body === '') {
+    res.json({
+      success: false,
+      error: 'Body was not defined'
+    });
+  } else {
+    next();
+  }
+}
+
 
 module.exports = {
   addNewArticle,
@@ -197,5 +220,6 @@ module.exports = {
   editArticle,
   deleteArticle,
   getArticle,
-  analyticsTracker
+  analyticsTracker,
+  payloadValidation
 }

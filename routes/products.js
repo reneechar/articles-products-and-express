@@ -18,7 +18,7 @@ router.get('/', dbProducts.analyticsTracker, (req,res) => {
 
 // handles requests from postman
 router.route('/:id')
-  .put(dbProducts.analyticsTracker, (req,res) => {
+  .put(dbProducts.analyticsTracker, dbProducts.editPageValidation, (req,res) => {
     let success = false;
     if (dbProducts.editProduct(req)){
       success = true;
@@ -46,7 +46,7 @@ router.route('/:id/edit')
         })
       })
   })
-  .post(dbProducts.analyticsTracker, (req,res) => {
+  .post(dbProducts.analyticsTracker, dbProducts.editPageValidation, (req,res) => {
     let success = false;
     if (dbProducts.editProduct(req)) {
       success = true;
@@ -60,7 +60,7 @@ router.route('/new')
       page
     })
   })
-  .post(dbProducts.analyticsTracker, (req,res) => {
+  .post(dbProducts.analyticsTracker, dbProducts.payloadValidation, (req,res) => {
     dbProducts.addNewProduct(req)
       .then(done => {
         res.json({success:true})

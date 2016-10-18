@@ -12,13 +12,19 @@ block body
     div.entryBox
       if page == 'Product Page'
         form(method='post' action='#')
+          p.field Product Name
           input(placeholder='enter product name' name='name')#name
+          p.field Price
           input(placeholder='enter price' name='price')#price
+          p.field Inventory
           input(placeholder='enter amount in inventory' name='inventory')#inventory
           button#send Enter
       else
         form(method='post' action='#')
+          p.field Article Title
           input(placeholder='enter article title' name='title')#title
+          p.field Article Body
           input(placeholder='enter article' name='body')#body
+          p.field Article Author
           input(placeholder='enter article author' name ='author')#author
           button#send Enter

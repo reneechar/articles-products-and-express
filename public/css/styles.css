@@ -1,6 +1,11 @@
+h1, h3 {
+  color: #dbdbdb; }
+
 body {
   font-family: 'Lato', sans-serif;
-  padding: 20px; }
+  padding: 20px;
+  background: url("http://www.texturex.com/albums/Brick-Textures/brick%20wall%20texture%20black%20white%20grey%20wallpaper%20stock%20photo.jpg") no-repeat center;
+  background-size: 3000px; }
 
 #root {
   display: flex;
@@ -8,11 +13,11 @@ body {
   #root .entryBox {
     display: flex;
     flex-flow: row wrap;
-    background-color: #87B8C2;
+    background-color: #333333;
+    opacity: .7;
     width: 200px;
     justify-content: center;
-    padding: 20px;
-    border-radius: 20%; }
+    padding: 20px; }
     #root .entryBox form {
       display: flex;
       flex-flow: row wrap;
@@ -21,8 +26,14 @@ body {
         flex: 0 0 170px;
         margin: 1px; }
       #root .entryBox form button {
-        margin: 2px;
+        font-family: inherit;
+        border-style: none;
+        background-color: #999999;
+        color: white;
+        margin: 10px;
         flex: 0 0 50px; }
+        #root .entryBox form button:hover {
+          background-color: #B1748F; }
 
 ul {
   display: flex;
@@ -32,12 +43,12 @@ ul {
     list-style: none;
     padding: 10px;
     margin: 5px;
-    background-color: #87B8C2;
-    text-align: center;
-    border-radius: 20%; }
+    background-color: #333333;
+    opacity: .7;
+    text-align: center; }
     ul li a {
       text-decoration: none;
-      color: black; }
+      color: #999999; }
       ul li a:hover {
         color: white; }
 
@@ -47,9 +58,9 @@ ul {
   margin: 20px; }
   #linkContainer .homePage {
     flex: 0 0 200px;
-    background-color: #E1CD6D;
+    background-color: #333333;
+    opacity: .7;
     margin: 5px;
-    border-radius: 20%;
     padding: 10px;
     text-align: center; }
     #linkContainer .homePage:hover {
@@ -58,7 +69,7 @@ ul {
         color: white; }
     #linkContainer .homePage a {
       text-decoration: none;
-      color: black; }
+      color: #999999; }
 
 #newPage {
   padding-left: 20px;
@@ -67,18 +78,23 @@ ul {
   #newPage .addNew {
     display: flex;
     flex-flow: row wrap;
-    flex: 0 0 150px;
-    margin-left: 20px;
-    background-color: #E1CD6D;
-    padding: 20px;
-    border-radius: 20%; }
+    flex: 0 0 120px;
+    justify-content: center;
+    height: 70px;
+    margin-left: 30px;
+    background-color: #333333;
+    opacity: .7;
+    padding: 5px; }
     #newPage .addNew:hover {
       background-color: #B1748F; }
       #newPage .addNew:hover a {
         color: white; }
     #newPage .addNew a {
       text-decoration: none;
-      color: black; }
+      color: #999999; }
 
 .container {
   width: 100%; }
+
+.field {
+  color: white; }

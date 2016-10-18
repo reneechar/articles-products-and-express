@@ -1,6 +1,7 @@
-$block-Color: #87B8C2;
-$button-Color: #E1CD6D;
-$hover-button: #B1748F;
+$pink-color: #B1748F;
+$dark-gray-color: #333333;
+$light-gray-color: #999999;
+$off-white-color: #dbdbdb;
 
 //mixins
 @mixin flexParent() {
@@ -10,21 +11,26 @@ $hover-button: #B1748F;
 
 @mixin hoverColor() {
   &:hover {
-    background-color: $hover-button;
+    background-color: $pink-color;
     a {
       color: white;
     }
   }
   a {
     text-decoration: none;
-     color: black;
+     color: $light-gray-color;
   }
 }
 
+h1,h3{
+  color: $off-white-color;
+}
 
 body {
   font-family: 'Lato', sans-serif;
   padding: 20px;
+  background: url("http://www.texturex.com/albums/Brick-Textures/brick%20wall%20texture%20black%20white%20grey%20wallpaper%20stock%20photo.jpg") no-repeat center;
+  background-size: 3000px;
 }
 
 
@@ -32,11 +38,12 @@ body {
   @include flexParent();
   .entryBox {
     @include flexParent();
-    background-color: $block-Color;
+    background-color: $dark-gray-color;
+    opacity: .7;
     width: 200px;
     justify-content: center;
     padding: 20px;
-    border-radius: 20%;
+
     form {
       @include flexParent();
       flex: 0 0 200px;
@@ -45,8 +52,15 @@ body {
         margin: 1px;
       }
       button {
-        margin: 2px;
+        font-family: inherit;
+        border-style: none;
+        background-color: $light-gray-color;
+        color: white;
+        margin: 10px;
         flex: 0 0 50px;
+        &:hover {
+          background-color: $pink-color;
+        }
       }
     }
   }
@@ -59,12 +73,13 @@ ul {
     list-style: none;
     padding: 10px;
     margin: 5px;
-    background-color: $block-Color;
+    background-color: $dark-gray-color;
+    opacity: .7;
     text-align: center;
-    border-radius: 20%;
+
     a {
       text-decoration: none;
-      color: black;
+      color: $light-gray-color;
       &:hover {
         color: white;
       }
@@ -78,9 +93,10 @@ ul {
 
   .homePage {
     flex: 0 0 200px;
-    background-color: $button-Color;
+    background-color: $dark-gray-color;
+    opacity: .7;
     margin: 5px;
-    border-radius: 20%;
+
     padding: 10px;
     text-align: center;
     @include hoverColor();
@@ -92,15 +108,23 @@ ul {
   @include flexParent();
   .addNew {
     @include flexParent();
-    flex: 0 0 150px;
-    margin-left: 20px;
-    background-color: $button-Color;
-    padding: 20px;
-    border-radius: 20%;
+    flex: 0 0 120px;
+    justify-content: center;
+    height: 70px;
+    margin-left: 30px;
+    background-color: $dark-gray-color;
+    opacity: .7;
+    padding: 5px;
+
     @include hoverColor();
+
   }
 }
 
 .container {
   width: 100%;
+}
+
+.field {
+  color: white;
 }

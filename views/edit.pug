@@ -10,8 +10,11 @@ block body
     div#root
       div.entryBox
         form(method='post' action='#')
+          p.field Product Name
           input(placeholder=product.name name='name')
+          p.field Product Price
           input(placeholder=product.price name='price')
+          p.field Product Inventory
           input(placeholder=product.inventory name='inventory')
           button#send Edit
   else
@@ -20,7 +23,10 @@ block body
     div#root
       div.entryBox
         form(method='post' action='#')
+          p.field Article Title
           input(placeholder=article.title name='title')
+          p.field Article Author
           input(placeholder=article.author name='author')
+          p.field Article Body
           input(placeholder=article.body name='body')
           button#send Edit
